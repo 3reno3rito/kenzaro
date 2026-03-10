@@ -11,7 +11,7 @@ interface ProductsPageProps {
 
 export const metadata = {
   title: 'Produtos',
-  description: 'Explore nossa coleção completa de calçados.',
+  description: 'Explore nossa colecao completa de calcados.',
 }
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
@@ -19,18 +19,13 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const categories = getCategories()
 
   return (
-    <Container className="py-10">
-      <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          {category ? category.charAt(0).toUpperCase() + category.slice(1) : 'Todos os Produtos'}
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Encontre o calçado perfeito para você
-        </p>
-      </div>
+    <Container className="py-8 sm:py-12">
+      <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-6">
+        {category ? category.charAt(0).toUpperCase() + category.slice(1) : 'Todos os Produtos'}
+      </h1>
 
-      {/* Category filters */}
-      <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-1">
+      {/* Category filters — pill style */}
+      <div className="flex items-center gap-6 mb-8 overflow-x-auto border-b border-border no-scrollbar">
         <CategoryPill href="/produtos" active={!category}>Todos</CategoryPill>
         {categories.map((cat) => (
           <CategoryPill key={cat} href={`/produtos?category=${cat}`} active={category === cat}>
@@ -56,10 +51,10 @@ function CategoryPill({ href, active, children }: { href: string; active: boolea
   return (
     <Link
       href={href}
-      className={`px-4 py-2 rounded-full text-sm font-medium border transition-all whitespace-nowrap ${
+      className={`pb-2.5 text-[13px] whitespace-nowrap border-b-2 -mb-px transition-colors ${
         active
-          ? 'bg-foreground border-foreground text-background'
-          : 'border-border text-muted-foreground hover:border-foreground hover:text-foreground'
+          ? 'font-semibold text-foreground border-foreground'
+          : 'font-medium text-muted-foreground border-transparent hover:text-foreground'
       }`}
     >
       {children}

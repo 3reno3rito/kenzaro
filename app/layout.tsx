@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({
+const sans = Plus_Jakarta_Sans({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-sans',
@@ -10,21 +10,21 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Kazenami',
-    template: '%s | Kazenami',
+    default: 'Kenzaro',
+    template: '%s | Kenzaro',
   },
-  description: 'Calzados de alto rendimiento con diseño contemporaneo.',
+  description: 'Performance e design em cada passo.',
 }
 
 export const viewport: Viewport = {
-  themeColor: '#fafaf9',
+  themeColor: '#ffffff',
   width: 'device-width',
   initialScale: 1,
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={inter.variable}>
+    <html lang="pt-BR" className={sans.variable}>
       <body className="font-sans">{children}</body>
     </html>
   )

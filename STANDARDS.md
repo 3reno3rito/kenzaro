@@ -1,4 +1,4 @@
-# Kazenami — Project Standards
+# Kenzaro — Project Standards
 
 > E-commerce de calçados. Performance é prioridade absoluta.
 > O objetivo é 10/10 em todas as categorias: performance, UX, código, arquitetura.

@@ -1,45 +1,73 @@
+'use client'
+
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { ShoppingBag, Search, Menu } from 'lucide-react'
 import { Container } from '@/components/ui/container'
+import { useCart } from '@/lib/cart/cart-context'
+
+const navLinks = [
+  { href: '/produtos', label: 'Loja', match: '/produtos' },
+  { href: '/sobre', label: 'Sobre', match: '/sobre' },
+  { href: '/contato', label: 'Contato', match: '/contato' },
+]
 
 export function Header() {
+  const pathname = usePathname()
+  const { totalItems } = useCart()
+
+  function isActive(link: (typeof navLinks)[number]) {
+    return pathname === link.match || pathname.startsWith(`${link.match}/`)
+  }
+
   return (
-    <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b border-border/50">
+    <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-md">
       <Container>
         <div className="flex h-14 items-center justify-between">
+          {/* Left — logo */}
           <div className="flex items-center gap-6">
-            <button type="button" className="lg:hidden -ml-1 p-2" aria-label="Menu">
+            <button type="button" className="lg:hidden p-1.5" aria-label="Menu">
               <Menu className="h-5 w-5" />
             </button>
-            <Link href="/" className="font-display text-lg font-bold tracking-tight">
-              Kazenami
+            <Link href="/" className="text-xl font-extrabold tracking-tight">
+              kenzaro
             </Link>
-            <nav className="hidden lg:flex items-center gap-6">
-              <Link href="/produtos" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Produtos
-              </Link>
-              <Link href="/produtos?category=corrida" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Corrida
-              </Link>
-              <Link href="/produtos?category=casual" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Casual
-              </Link>
-              <Link href="/produtos?category=trail" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Trail
-              </Link>
-            </nav>
           </div>
 
-          <div className="flex items-center gap-1">
-            <button type="button" className="p-2 hover:bg-secondary rounded-full transition-colors" aria-label="Buscar">
+          {/* Center — nav */}
+          <nav className="hidden lg:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`px-4 py-1.5 rounded-lg text-[15px] font-extrabold transition-colors ${
+                  isActive(link)
+                    ? 'text-primary'
+                    : 'text-foreground hover:bg-surface'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Right — actions */}
+          <div className="flex items-center gap-2">
+            <button type="button" className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-surface transition-colors" aria-label="Buscar">
               <Search className="h-5 w-5" />
             </button>
-            <Link href="/carrinho" className="relative p-2 hover:bg-secondary rounded-full transition-colors" aria-label="Carrinho">
+            <Link href="/carrinho" className="relative p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-surface transition-colors" aria-label="Carrinho">
               <ShoppingBag className="h-5 w-5" />
+              {totalItems > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center h-4.5 min-w-4.5 px-1 rounded-full bg-primary text-primary-foreground text-[10px] font-bold leading-none">
+                  {totalItems > 9 ? '9+' : totalItems}
+                </span>
+              )}
             </Link>
           </div>
         </div>
       </Container>
+      <div className="h-px bg-border" />
     </header>
   )
 }

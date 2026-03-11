@@ -1,22 +1,41 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { Container } from '@/components/ui/container'
+import { Sort } from '@/components/ui/sort'
 import { ProductGrid } from '@/components/product/product-grid'
 import { ProductGridSkeleton } from '@/components/product/product-card-skeleton'
 import { getAllProducts, getCategories } from '@/lib/data/products'
+import type { Product } from '@/lib/types/product'
 
 interface ProductsPageProps {
-  searchParams: Promise<{ category?: string }>
+  searchParams: Promise<{ category?: string; sort?: string }>
 }
 
 export const metadata = {
   title: 'Produtos',
-  description: 'Explore nossa colecao completa de calcados.',
+  description: 'Explore nossa coleção completa de calçados.',
+}
+
+function sortProducts(products: Product[], sort?: string): Product[] {
+  if (!sort) return products
+  const sorted = [...products]
+  switch (sort) {
+    case 'price-asc':
+      return sorted.sort((a, b) => a.price - b.price)
+    case 'price-desc':
+      return sorted.sort((a, b) => b.price - a.price)
+    case 'name-asc':
+      return sorted.sort((a, b) => a.name.localeCompare(b.name))
+    case 'name-desc':
+      return sorted.sort((a, b) => b.name.localeCompare(a.name))
+    default:
+      return sorted
+  }
 }
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
-  const { category } = await searchParams
-  const categories = getCategories()
+  const { category, sort } = await searchParams
+  const categories = await getCategories()
 
   return (
     <Container className="py-8 sm:py-12">
@@ -24,26 +43,32 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         {category ? category.charAt(0).toUpperCase() + category.slice(1) : 'Todos os Produtos'}
       </h1>
 
-      {/* Category filters — pill style */}
-      <div className="flex items-center gap-6 mb-8 overflow-x-auto border-b border-border no-scrollbar">
-        <CategoryPill href="/produtos" active={!category}>Todos</CategoryPill>
-        {categories.map((cat) => (
-          <CategoryPill key={cat} href={`/produtos?category=${cat}`} active={category === cat}>
-            {cat.charAt(0).toUpperCase() + cat.slice(1)}
-          </CategoryPill>
-        ))}
+      {/* Category filters + sort */}
+      <div className="flex items-center mb-8 border-b border-border">
+        <div className="flex items-center gap-6 overflow-x-auto no-scrollbar">
+          <CategoryPill href="/produtos" active={!category}>Todos</CategoryPill>
+          {categories.map((cat) => (
+            <CategoryPill key={cat} href={`/produtos?category=${cat}`} active={category === cat}>
+              {cat.charAt(0).toUpperCase() + cat.slice(1)}
+            </CategoryPill>
+          ))}
+        </div>
+        <div className="ml-auto pl-6 shrink-0 pb-2.5">
+          <Sort />
+        </div>
       </div>
 
       <Suspense fallback={<ProductGridSkeleton count={8} />}>
-        <FilteredProducts category={category} />
+        <FilteredProducts category={category} sort={sort} />
       </Suspense>
     </Container>
   )
 }
 
-async function FilteredProducts({ category }: { category?: string }) {
-  const all = getAllProducts()
-  const products = category ? all.filter((p) => p.category === category) : all
+async function FilteredProducts({ category, sort }: { category?: string; sort?: string }) {
+  const all = await getAllProducts()
+  const filtered = category ? all.filter((p) => p.category === category) : all
+  const products = sortProducts(filtered, sort)
   return <ProductGrid products={products} />
 }
 

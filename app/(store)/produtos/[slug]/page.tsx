@@ -11,12 +11,13 @@ interface ProductPageProps {
 }
 
 export async function generateStaticParams() {
-  return getAllProducts().map((p) => ({ slug: p.slug }))
+  const products = await getAllProducts()
+  return products.map((p) => ({ slug: p.slug }))
 }
 
 export async function generateMetadata({ params }: ProductPageProps) {
   const { slug } = await params
-  const product = getProductBySlug(slug)
+  const product = await getProductBySlug(slug)
   if (!product) return {}
   return {
     title: product.name,
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }: ProductPageProps) {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params
-  const product = getProductBySlug(slug)
+  const product = await getProductBySlug(slug)
   if (!product) notFound()
 
   const hasDiscount = product.originalPrice && product.originalPrice > product.price
@@ -100,16 +101,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
           {/* Info badges */}
           <div className="mt-8 grid grid-cols-3 gap-3">
             <div className="text-center rounded-2xl bg-surface p-3">
-              <p className="text-xs font-bold">Frete gratis</p>
+              <p className="text-xs font-bold">Frete grátis</p>
               <p className="text-[11px] text-muted-foreground mt-0.5">acima de R$ 299</p>
             </div>
             <div className="text-center rounded-2xl bg-surface p-3">
-              <p className="text-xs font-bold">Troca facil</p>
+              <p className="text-xs font-bold">Troca fácil</p>
               <p className="text-[11px] text-muted-foreground mt-0.5">30 dias</p>
             </div>
             <div className="text-center rounded-2xl bg-surface p-3">
               <p className="text-xs font-bold">Parcelamento</p>
-              <p className="text-[11px] text-muted-foreground mt-0.5">ate 10x sem juros</p>
+              <p className="text-[11px] text-muted-foreground mt-0.5">até 10x sem juros</p>
             </div>
           </div>
         </div>

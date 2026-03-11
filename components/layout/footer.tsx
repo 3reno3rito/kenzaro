@@ -44,8 +44,7 @@ const footerLinks = [
   { href: '/produtos', label: 'Loja' },
   { href: '/sobre', label: 'Sobre' },
   { href: '/contato', label: 'Contato' },
-  { href: '/faq', label: 'FAQ' },
-  { href: '/trocas', label: 'Trocas' },
+  { href: '/ajuda', label: 'Ajuda' },
   { href: '/termos', label: 'Termos' },
   { href: '/privacidade', label: 'Privacidade' },
 ]

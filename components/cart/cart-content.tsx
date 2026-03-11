@@ -16,8 +16,8 @@ export function CartContent() {
         <div className="flex items-center justify-center size-16 rounded-full bg-surface mb-5">
           <ShoppingBag className="size-7 text-muted-foreground" />
         </div>
-        <h2 className="text-lg font-bold mb-1">Seu carrinho esta vazio</h2>
-        <p className="text-sm text-muted-foreground mb-6">Explore nossos produtos e encontre algo que voce goste.</p>
+        <h2 className="text-lg font-bold mb-1">Seu carrinho está vazio</h2>
+        <p className="text-sm text-muted-foreground mb-6">Explore nossos produtos e encontre algo que você goste.</p>
         <Link
           href="/produtos"
           className="inline-flex items-center justify-center gap-2 rounded-full bg-foreground text-background font-bold h-12 px-8 text-sm hover:bg-foreground/90 transition-colors"
@@ -64,7 +64,7 @@ export function CartContent() {
             <div className="flex justify-between">
               <span className="text-muted-foreground">Frete</span>
               <span className="font-semibold text-muted-foreground">
-                {totalPrice >= 299 ? 'Gratis' : 'Calculado no checkout'}
+                {totalPrice >= 299 ? 'Grátis' : 'Calculado no checkout'}
               </span>
             </div>
             <div className="h-px bg-border" />

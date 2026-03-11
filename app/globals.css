@@ -105,9 +105,7 @@
     cursor: pointer;
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    html { scroll-behavior: smooth; }
-  }
+  /* scroll-behavior: smooth removido — conflita com o scroll-to-top do Next.js na navegação entre páginas */
 
   :focus-visible {
     outline: 2px solid var(--color-ring);

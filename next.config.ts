@@ -4,7 +4,9 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   images: {
     formats: ['image/avif', 'image/webp'],
-    remotePatterns: [{ hostname: 'images.unsplash.com' }],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
+    ],
   },
   experimental: {
     optimizePackageImports: ['lucide-react'],

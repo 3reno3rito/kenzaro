@@ -8,7 +8,7 @@ interface ProductGridProps {
 
 export function ProductGrid({ products, priorityCount = 4 }: ProductGridProps) {
   return (
-    <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3">
       {products.map((product, i) => (
         <ProductCard key={product.id} product={product} priority={i < priorityCount} />
       ))}

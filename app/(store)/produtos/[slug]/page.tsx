@@ -4,15 +4,10 @@ import { Container } from '@/components/ui/container'
 import { Badge } from '@/components/ui/badge'
 import { ProductActions } from '@/components/product/product-actions'
 import { formatCurrency } from '@/lib/utils/format'
-import { getProductBySlug, getAllProducts } from '@/lib/data/products'
+import { getProductBySlug } from '@/lib/data/products'
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>
-}
-
-export async function generateStaticParams() {
-  const products = await getAllProducts()
-  return products.map((p) => ({ slug: p.slug }))
 }
 
 export async function generateMetadata({ params }: ProductPageProps) {
@@ -39,14 +34,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
         {/* Images */}
         <div className="space-y-3">
           <div className="relative aspect-[3/4] overflow-hidden rounded-3xl bg-surface">
-            <Image
-              src={product.images[0]}
-              alt={product.name}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
+            {product.images[0]?.startsWith('http') && (
+              <Image
+                src={product.images[0]}
+                alt={product.name}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+              />
+            )}
           </div>
           {product.images.length > 1 && (
             <div className="grid grid-cols-4 gap-2">

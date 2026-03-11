@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react'
 import { getAllProducts } from '@/lib/data/products'
 import { formatCurrency } from '@/lib/utils/format'
 import { Badge } from '@/components/ui/badge'
+import { DeleteProductButton } from '@/components/admin/delete-product-button'
 
 export default async function AdminProdutosPage() {
   const products = await getAllProducts()
@@ -43,7 +44,7 @@ export default async function AdminProdutosPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-surface">
-                        {product.images[0] ? (
+                        {product.images[0]?.startsWith('http') ? (
                           <Image
                             src={product.images[0]}
                             alt={product.name}
@@ -84,12 +85,15 @@ export default async function AdminProdutosPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Link
-                      href={`/admin/produtos/${product.id}`}
-                      className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      Editar
-                    </Link>
+                    <div className="flex items-center justify-end gap-3">
+                      <Link
+                        href={`/admin/produtos/${product.id}`}
+                        className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        Editar
+                      </Link>
+                      <DeleteProductButton id={product.id} />
+                    </div>
                   </td>
                 </tr>
               ))}

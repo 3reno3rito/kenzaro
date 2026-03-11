@@ -8,7 +8,7 @@ import { createProduct, updateProduct } from '@/lib/actions/products'
 import type { Product } from '@/lib/types/product'
 
 const categories = ['corrida', 'casual', 'trail', 'social', 'treino']
-const allSizes = [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46]
+const allSizes = Array.from({ length: 32 }, (_, i) => i + 16)
 
 const inputClass =
   'w-full px-3 py-2.5 rounded-lg border border-border bg-background text-sm outline-none focus:border-foreground transition-colors'
@@ -54,7 +54,7 @@ export function ProductForm({ product }: ProductFormProps) {
 
   function handleNameChange(value: string) {
     setName(value)
-    if (!isEditing) setSlug(generateSlug(value))
+    setSlug(generateSlug(value))
   }
 
   function toggleSize(size: number) {
@@ -136,7 +136,6 @@ export function ProductForm({ product }: ProductFormProps) {
       } else {
         await createProduct(input)
       }
-      router.push('/admin/produtos')
     })
   }
 
@@ -236,31 +235,17 @@ export function ProductForm({ product }: ProductFormProps) {
         <div className="bg-background border border-border rounded-xl p-6">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-4">Informações</h2>
           <div className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="name" className={labelClass}>Nome</label>
-                <input
-                  id="name"
-                  type="text"
-                  required
-                  value={name}
-                  onChange={(e) => handleNameChange(e.target.value)}
-                  className={inputClass}
-                  placeholder="Runner X1"
-                />
-              </div>
-              <div>
-                <label htmlFor="slug" className={labelClass}>Slug</label>
-                <input
-                  id="slug"
-                  type="text"
-                  required
-                  value={slug}
-                  onChange={(e) => setSlug(e.target.value)}
-                  className={inputClass}
-                  placeholder="runner-x1"
-                />
-              </div>
+            <div>
+              <label htmlFor="name" className={labelClass}>Nome</label>
+              <input
+                id="name"
+                type="text"
+                required
+                value={name}
+                onChange={(e) => handleNameChange(e.target.value)}
+                className={inputClass}
+                placeholder="Runner X1"
+              />
             </div>
             <div>
               <label htmlFor="brand" className={labelClass}>Marca</label>

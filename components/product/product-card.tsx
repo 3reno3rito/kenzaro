@@ -15,15 +15,17 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 
   return (
     <Link href={`/produtos/${product.slug}`} className="group block">
-      <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-surface">
-        <Image
-          src={product.images[0]}
-          alt={product.name}
-          fill
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          priority={priority}
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-        />
+      <div className="relative aspect-square overflow-hidden rounded-2xl bg-surface">
+        {product.images[0]?.startsWith('http') && (
+          <Image
+            src={product.images[0]}
+            alt={product.name}
+            fill
+            sizes="(max-width: 640px) 50vw, 33vw"
+            priority={priority}
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          />
+        )}
         {hasDiscount && (
           <Badge variant="destructive" className="absolute top-3 left-3">
             -{discount}%

@@ -4,7 +4,7 @@ import { Container } from '@/components/ui/container'
 import { Sort } from '@/components/ui/sort'
 import { ProductGrid } from '@/components/product/product-grid'
 import { ProductGridSkeleton } from '@/components/product/product-card-skeleton'
-import { getAllProducts, getCategories } from '@/lib/data/products'
+import { getAllProducts, getProductsByCategory, getCategories } from '@/lib/data/products'
 import type { Product } from '@/lib/types/product'
 
 interface ProductsPageProps {
@@ -66,10 +66,8 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 }
 
 async function FilteredProducts({ category, sort }: { category?: string; sort?: string }) {
-  const all = await getAllProducts()
-  const filtered = category ? all.filter((p) => p.category === category) : all
-  const products = sortProducts(filtered, sort)
-  return <ProductGrid products={products} />
+  const products = category ? await getProductsByCategory(category) : await getAllProducts()
+  return <ProductGrid products={sortProducts(products, sort)} />
 }
 
 function CategoryPill({ href, active, children }: { href: string; active: boolean; children: React.ReactNode }) {

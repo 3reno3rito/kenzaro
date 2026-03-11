@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidateTag } from 'next/cache'
+import { redirect } from 'next/navigation'
 import sql from '@/lib/db'
 import { ensureTable } from '@/lib/db-helpers'
 import cloudinary, { extractPublicId } from '@/lib/cloudinary'
@@ -32,9 +32,9 @@ export async function createProduct(input: ProductInput) {
       ${input.description},
       ${input.price},
       ${input.originalPrice ?? null},
-      ${JSON.stringify(input.images)},
-      ${JSON.stringify(input.colors)},
-      ${JSON.stringify(input.sizes)},
+      ${sql.json(input.images)},
+      ${sql.json(input.colors)},
+      ${sql.json(input.sizes)},
       ${input.category},
       ${input.isNew},
       ${input.isFeatured}
@@ -42,8 +42,7 @@ export async function createProduct(input: ProductInput) {
     RETURNING id
   `
 
-  revalidateTag('products', 'max')
-  return { id: rows[0].id as number }
+  redirect('/admin/produtos')
 }
 
 export async function updateProduct(id: string, input: ProductInput) {
@@ -57,16 +56,16 @@ export async function updateProduct(id: string, input: ProductInput) {
       description = ${input.description},
       price = ${input.price},
       original_price = ${input.originalPrice ?? null},
-      images = ${JSON.stringify(input.images)},
-      colors = ${JSON.stringify(input.colors)},
-      sizes = ${JSON.stringify(input.sizes)},
+      images = ${sql.json(input.images)},
+      colors = ${sql.json(input.colors)},
+      sizes = ${sql.json(input.sizes)},
       category = ${input.category},
       is_new = ${input.isNew},
       is_featured = ${input.isFeatured}
     WHERE id = ${Number(id)}
   `
 
-  revalidateTag('products', 'max')
+  redirect('/admin/produtos')
 }
 
 export async function deleteProduct(id: string) {
@@ -74,13 +73,13 @@ export async function deleteProduct(id: string) {
 
   const rows = await sql`SELECT images FROM products WHERE id = ${Number(id)}`
   if (rows[0]) {
-    const images = rows[0].images as string[]
-    const publicIds = images.map(extractPublicId).filter(Boolean) as string[]
+    const raw = rows[0].images
+    const images = Array.isArray(raw) ? (raw as string[]) : []
+    const publicIds = images.filter((u) => typeof u === 'string' && u.startsWith('http')).map(extractPublicId).filter(Boolean) as string[]
     if (publicIds.length > 0) {
       await Promise.all(publicIds.map((pid) => cloudinary.uploader.destroy(pid)))
     }
   }
 
   await sql`DELETE FROM products WHERE id = ${Number(id)}`
-  revalidateTag('products', 'max')
 }
